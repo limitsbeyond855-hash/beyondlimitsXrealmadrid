@@ -377,3 +377,144 @@ document.addEventListener("keydown", (event) => {
     }
 
 });
+/* =========================
+   ACCOUNT DRAWER
+========================= */
+
+const accountOpen = document.getElementById("account-open");
+const accountClose = document.getElementById("account-close");
+const accountDrawer = document.getElementById("account-drawer");
+const accountOverlay = document.getElementById("account-overlay");
+
+const signinTab = document.getElementById("signin-tab");
+const signupTab = document.getElementById("signup-tab");
+
+const signinForm = document.getElementById("signin-form");
+const signupForm = document.getElementById("signup-form");
+
+
+function openAccount() {
+    accountDrawer.classList.add("active");
+    accountOverlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeAccount() {
+    accountDrawer.classList.remove("active");
+    accountOverlay.classList.remove("active");
+    document.body.style.overflow = "";
+}
+
+
+accountOpen.addEventListener("click", openAccount);
+
+accountClose.addEventListener("click", closeAccount);
+
+accountOverlay.addEventListener("click", closeAccount);
+
+
+signinTab.addEventListener("click", () => {
+
+    signinTab.classList.add("active");
+    signupTab.classList.remove("active");
+
+    signinForm.classList.remove("hidden");
+    signupForm.classList.add("hidden");
+
+});
+
+
+signupTab.addEventListener("click", () => {
+
+    signupTab.classList.add("active");
+    signinTab.classList.remove("active");
+
+    signupForm.classList.remove("hidden");
+    signinForm.classList.add("hidden");
+
+});
+/* =========================
+   SUPABASE AUTHENTICATION
+========================= */
+
+const SUPABASE_URL = "https://tuxjlnmhuejldrsuvoip.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_NQiebbnjw2jwF3L9Xry1Gg_-fCSR6LC";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =========================
+   CREATE ACCOUNT
+========================= */
+
+signupForm.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+
+    const email = document.getElementById("signup-email").value.trim();
+    const password = document.getElementById("signup-password").value;
+
+   const { data, error } = await supabaseClient.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+        emailRedirectTo:
+            "https://limitsbeyond855-hash.github.io/beyondlimitsXrealmadrid/"
+    }
+    });
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    if (data.user) {
+        alert(
+            "Account created successfully. Check your email to confirm your account."
+        );
+
+        signupForm.reset();
+
+        signinTab.click();
+    }
+
+});
+
+
+/* =========================
+   SIGN IN
+========================= */
+
+signinForm.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+
+    const email = document.getElementById("signin-email").value.trim();
+    const password = document.getElementById("signin-password").value;
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    if (data.user) {
+
+        alert("Welcome back to Beyond Limits.");
+
+        signinForm.reset();
+
+        closeAccount();
+    }
+
+});
