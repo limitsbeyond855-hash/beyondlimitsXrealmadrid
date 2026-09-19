@@ -457,17 +457,21 @@ signupForm.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
-    const email = document.getElementById("signup-email").value.trim();
-    const password = document.getElementById("signup-password").value;
+    const username = document.getElementById("signup-username").value.trim();
+const email = document.getElementById("signup-email").value.trim();
+const password = document.getElementById("signup-password").value;
 
    const { data, error } = await supabaseClient.auth.signUp({
     email: email,
     password: password,
     options: {
         emailRedirectTo:
-            "https://limitsbeyond855-hash.github.io/beyondlimitsXrealmadrid/"
+            "https://limitsbeyond855-hash.github.io/beyondlimitsXrealmadrid/",
+        data: {
+            username: username
+        }
     }
-    });
+});
 
     if (error) {
         alert(error.message);

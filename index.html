@@ -507,7 +507,63 @@
 
     </div>
 
-    <form class="account-form" id="signin-form">
+    <form class="account-form hidden" id="signup-form">
+
+    <button type="button" class="social-signup" id="google-signup">
+        <span>G</span>
+        CONTINUE WITH GOOGLE
+        <span>↗</span>
+    </button>
+
+    <button type="button" class="social-signup" id="phone-signup">
+        <span>⌕</span>
+        CONTINUE WITH PHONE
+        <span>↗</span>
+    </button>
+
+    <div class="account-divider">
+        <span>OR</span>
+    </div>
+
+    <label>
+        USERNAME
+        <input
+            type="text"
+            id="signup-username"
+            placeholder="@yourusername"
+            minlength="3"
+            maxlength="20"
+            required
+        >
+    </label>
+
+    <label>
+        EMAIL
+        <input
+            type="email"
+            id="signup-email"
+            placeholder="you@example.com"
+            required
+        >
+    </label>
+
+    <label>
+        PASSWORD
+        <input
+            type="password"
+            id="signup-password"
+            placeholder="Create a password"
+            minlength="8"
+            required
+        >
+    </label>
+
+    <button type="submit" class="account-submit">
+        CREATE ACCOUNT
+        <span>↗</span>
+    </button>
+
+</form>
 
         <label>
             EMAIL
@@ -641,7 +697,7 @@
     </div>
 
 </aside>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 </body>
 </html>
