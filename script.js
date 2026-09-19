@@ -474,9 +474,10 @@ const password = document.getElementById("signup-password").value;
 });
 
     if (error) {
-        alert(error.message);
-        return;
-    }
+    console.error("Supabase signup error:", error);
+    alert("Signup failed:\n\n" + error.message);
+    return;
+}
 
     if (data.user) {
         alert(
