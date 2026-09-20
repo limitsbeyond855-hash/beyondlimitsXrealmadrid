@@ -467,6 +467,7 @@
     </div>
 
 </aside>
+
 <!-- =========================
      ACCOUNT DRAWER
 ========================= -->
@@ -500,76 +501,21 @@
         <button class="account-tab active" id="signin-tab">
             SIGN IN
         </button>
-        
-        <p class="account-status" id="signin-status"></p>
 
         <button class="account-tab" id="signup-tab">
             CREATE ACCOUNT
         </button>
-        <p class="account-status" id="account-status"></p>
 
     </div>
 
-    <form class="account-form hidden" id="signup-form">
 
-    <button type="button" class="social-signup" id="google-signup">
-        <span>G</span>
-        CONTINUE WITH GOOGLE
-        <span>↗</span>
-    </button>
+    <!-- SIGN IN FORM -->
 
-    <button type="button" class="social-signup" id="phone-signup">
-        <span>⌕</span>
-        CONTINUE WITH PHONE
-        <span>↗</span>
-    </button>
-
-    <div class="account-divider">
-        <span>OR</span>
-    </div>
-
-    <label>
-        USERNAME
-        <input
-            type="text"
-            id="signup-username"
-            placeholder="@yourusername"
-            minlength="3"
-            maxlength="20"
-            required
-        >
-    </label>
-
-    <label>
-        EMAIL
-        <input
-            type="email"
-            id="signup-email"
-            placeholder="you@example.com"
-            required
-        >
-    </label>
-
-    <label>
-        PASSWORD
-        <input
-            type="password"
-            id="signup-password"
-            placeholder="Create a password"
-            minlength="8"
-            required
-        >
-    </label>
-
-    <button type="submit" class="account-submit">
-        CREATE ACCOUNT
-        <span>↗</span>
-    </button>
-
-</form>
+    <form class="account-form" id="signin-form">
 
         <label>
             EMAIL
+
             <input
                 type="email"
                 id="signin-email"
@@ -580,6 +526,7 @@
 
         <label>
             PASSWORD
+
             <input
                 type="password"
                 id="signin-password"
@@ -589,16 +536,68 @@
         </label>
 
         <button type="submit" class="account-submit">
+
             SIGN IN
+
             <span>↗</span>
+
         </button>
 
     </form>
 
+
+    <!-- CREATE ACCOUNT FORM -->
+
     <form class="account-form hidden" id="signup-form">
+
+        <button
+            type="button"
+            class="social-signup"
+            id="google-signup"
+        >
+            <span>G</span>
+
+            CONTINUE WITH GOOGLE
+
+            <span>↗</span>
+        </button>
+
+
+        <button
+            type="button"
+            class="social-signup"
+            id="phone-signup"
+        >
+            <span>⌕</span>
+
+            CONTINUE WITH PHONE
+
+            <span>↗</span>
+        </button>
+
+
+        <div class="account-divider">
+            <span>OR</span>
+        </div>
+
+
+        <label>
+            USERNAME
+
+            <input
+                type="text"
+                id="signup-username"
+                placeholder="@yourusername"
+                minlength="3"
+                maxlength="20"
+                required
+            >
+        </label>
+
 
         <label>
             EMAIL
+
             <input
                 type="email"
                 id="signup-email"
@@ -607,28 +606,41 @@
             >
         </label>
 
+
         <label>
             PASSWORD
+
             <input
                 type="password"
                 id="signup-password"
                 placeholder="Create a password"
+                minlength="8"
                 required
             >
         </label>
 
-        <button type="submit" class="account-submit">
+
+        <button
+            type="submit"
+            class="account-submit"
+        >
+
             CREATE ACCOUNT
+
             <span>↗</span>
+
         </button>
 
     </form>
+
 
     <p class="account-note">
         By continuing, you agree to the Beyond Limits terms.
     </p>
 
 </aside>
+
+
 
 
         <div class="footer-bottom">

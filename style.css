@@ -1376,7 +1376,7 @@ body.cart-open {
     width: 100%;
 }
 /* =========================
-   ACCOUNT DRAWER
+   ACCOUNT DRAWER — BEYOND LIMITS
 ========================= */
 
 .nav-actions {
@@ -1391,32 +1391,66 @@ body.cart-open {
     color: inherit;
     font: inherit;
     font-size: 10px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     cursor: pointer;
     padding: 0;
+    transition: opacity 0.25s ease;
 }
+
+.account:hover {
+    opacity: 0.55;
+}
+
+
+/* OVERLAY */
 
 .account-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.68);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.35s ease, visibility 0.35s ease;
+    transition:
+        opacity 0.35s ease,
+        visibility 0.35s ease;
     z-index: 90;
 }
+
+.account-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* DRAWER */
 
 .account-drawer {
     position: fixed;
     top: 0;
     right: 0;
-    width: min(460px, 100%);
+
+    width: min(480px, 100%);
     height: 100vh;
-    background: #0d0d0f;
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 50px 40px;
+
+    background:
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(201, 170, 114, 0.08),
+            transparent 32%
+        ),
+        #0b0b0d;
+
+    border-left: 1px solid rgba(255, 255, 255, 0.09);
+
+    padding: 45px 42px;
+
     transform: translateX(100%);
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+
+    transition:
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+
     z-index: 100;
     overflow-y: auto;
 }
@@ -1425,66 +1459,211 @@ body.cart-open {
     transform: translateX(0);
 }
 
-.account-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
+
+/* CLOSE BUTTON */
 
 .account-close {
     position: absolute;
-    top: 25px;
+    top: 27px;
     right: 30px;
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid rgba(255, 255, 255, 0.13);
     border-radius: 50%;
-    background: transparent;
+
+    background: rgba(255, 255, 255, 0.02);
     color: white;
-    font-size: 24px;
+
+    font-size: 22px;
+    font-weight: 300;
+
     cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease,
+        border-color 0.25s ease;
 }
 
+.account-close:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+
+/* HEADER */
+
 .account-header {
-    margin-top: 50px;
-    margin-bottom: 40px;
+    margin-top: 62px;
+    margin-bottom: 42px;
+}
+
+.account-header .eyebrow {
+    color: #c9aa72;
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    margin-bottom: 16px;
 }
 
 .account-header h2 {
-    margin: 10px 0 15px;
-    font-size: 28px;
-    letter-spacing: -0.03em;
+    margin: 0 0 14px;
+
+    font-size: clamp(28px, 5vw, 38px);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
 }
 
 .account-header > p:last-child {
-    color: #777;
-    font-size: 12px;
+    max-width: 290px;
+
+    color: #707074;
+    font-size: 11px;
     line-height: 1.7;
 }
+
+
+/* TABS */
 
 .account-tabs {
     display: flex;
     width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    margin-bottom: 35px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    margin-bottom: 36px;
 }
 
 .account-tab {
     flex: 1;
+
+    position: relative;
+
     background: none;
     border: none;
-    border-bottom: 1px solid transparent;
-    color: #666;
+
+    color: #55555a;
+
     padding: 15px 5px;
+
     font-size: 9px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.15em;
+
     cursor: pointer;
-    text-align: center;
+
+    transition: color 0.25s ease;
+}
+
+.account-tab:hover {
+    color: #aaa;
 }
 
 .account-tab.active {
     color: white;
-    border-bottom-color: white;
 }
+
+.account-tab.active::after {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+
+    width: 100%;
+    height: 1px;
+
+    background: #c9aa72;
+}
+
+
+/* SOCIAL SIGNUP BUTTONS */
+
+.social-signup {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 28px 1fr 20px;
+    align-items: center;
+
+    padding: 17px 18px;
+
+    margin-bottom: 10px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    border: 1px solid rgba(255, 255, 255, 0.11);
+
+    color: #eee;
+
+    font-family: inherit;
+    font-size: 9px;
+    letter-spacing: 0.13em;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.social-signup span:first-child {
+    font-size: 14px;
+    text-align: left;
+}
+
+.social-signup span:last-child {
+    font-size: 14px;
+    text-align: right;
+
+    transition: transform 0.3s ease;
+}
+
+.social-signup:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(201, 170, 114, 0.5);
+    transform: translateY(-2px);
+}
+
+.social-signup:hover span:last-child {
+    transform: translate(2px, -2px);
+}
+
+
+/* DIVIDER */
+
+.account-divider {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 27px 0;
+
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.account-divider span {
+    position: absolute;
+
+    padding: 0 14px;
+
+    background: #0b0b0d;
+
+    color: #55555a;
+
+    font-size: 8px;
+    letter-spacing: 0.18em;
+}
+
+
+/* FORMS */
 
 .account-form {
     display: flex;
@@ -1496,76 +1675,923 @@ body.cart-open {
     display: none;
 }
 
+
+/* LABELS */
+
 .account-form label {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    color: #777;
+
+    color: #77777c;
+
     font-size: 8px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.16em;
 }
+
+
+/* INPUTS */
 
 .account-form input {
     width: 100%;
     box-sizing: border-box;
-    padding: 16px 0;
+
+    padding: 14px 0;
+
     background: transparent;
+
     border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+
     outline: none;
+
     color: white;
-    font: inherit;
+
+    font-family: inherit;
     font-size: 12px;
+
+    transition:
+        border-color 0.25s ease,
+        padding-left 0.25s ease;
 }
 
 .account-form input:focus {
-    border-bottom-color: white;
+    border-bottom-color: #c9aa72;
+    padding-left: 5px;
 }
 
 .account-form input::placeholder {
-    color: #444;
+    color: #3f3f43;
 }
 
+
+/* SUBMIT BUTTON */
+
 .account-submit {
-    margin-top: 10px;
     width: 100%;
-    padding: 17px 20px;
+
+    margin-top: 5px;
+
+    padding: 18px 20px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: none;
-    background: white;
-    color: #111;
+
+    border: 1px solid #f5f3ef;
+
+    background: #f5f3ef;
+
+    color: #0b0b0d;
+
+    font-family: inherit;
     font-size: 9px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.15em;
+
     cursor: pointer;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease;
 }
 
 .account-submit span {
     font-size: 16px;
+
+    transition: transform 0.3s ease;
 }
 
-.account-note {
-    margin-top: 30px;
-    color: #444;
-    font-size: 8px;
-    line-height: 1.7;
+.account-submit:hover {
+    background: #c9aa72;
+    border-color: #c9aa72;
+
+    transform: translateY(-2px);
 }
+
+.account-submit:hover span {
+    transform: translate(3px, -3px);
+}
+
+
+/* STATUS MESSAGE */
+
 .account-status {
-    grid-column: 1 / -1;
-    margin-top: 18px;
+    margin-top: 3px;
+
+    min-height: 14px;
+
+    color: #77777c;
+
     font-size: 9px;
     line-height: 1.6;
+
     letter-spacing: 0.04em;
-    color: #aaa;
-    min-height: 14px;
 }
 
 .account-status.success {
-    color: #d8d8d8;
+    color: #c9aa72;
 }
 
 .account-status.error {
     color: #ff8f8f;
 }
 
+
+/* LEGAL NOTE */
+
+.account-note {
+    margin-top: 32px;
+
+    color: #3f3f43;
+
+    font-size: 8px;
+    line-height: 1.8;
+
+    letter-spacing: 0.03em;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .account-drawer {
+        padding: 35px 25px;
+    }
+
+    .account-header {
+        margin-top: 58px;
+    }
+
+    .account-header h2 {
+        font-size: 30px;
+    }
+
+    .account-close {
+        right: 20px;
+    }
+
+}
+/* =========================
+   ACCOUNT BUTTON UPGRADE
+========================= */
+
+.social-signup {
+    position: relative;
+    width: 100%;
+    min-height: 58px;
+
+    display: grid;
+    grid-template-columns: 34px 1fr 25px;
+    align-items: center;
+
+    padding: 0 18px;
+
+    margin-bottom: 12px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+
+    color: #f5f3ef;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition:
+        background 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.35s ease;
+}
+
+.social-signup::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 0;
+    height: 1px;
+
+    background: #c9aa72;
+
+    transition: width 0.4s ease;
+}
+
+.social-signup:hover {
+    background: rgba(255, 255, 255, 0.065);
+
+    border-color: rgba(201, 170, 114, 0.45);
+
+    transform: translateY(-2px);
+}
+
+.social-signup:hover::before {
+    width: 100%;
+}
+
+.social-signup span:first-child {
+    font-size: 14px;
+    text-align: left;
+    color: #c9aa72;
+}
+
+.social-signup span:last-child {
+    font-size: 15px;
+    text-align: right;
+
+    transition: transform 0.3s ease;
+}
+
+.social-signup:hover span:last-child {
+    transform: translate(3px, -3px);
+}
+
+
+/* MAIN ACCOUNT BUTTONS */
+
+.account-submit {
+    position: relative;
+
+    width: 100%;
+    min-height: 60px;
+
+    margin-top: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 20px;
+
+    background: #f5f3ef;
+
+    border: 1px solid #f5f3ef;
+
+    color: #0b0b0d;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition:
+        color 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.35s ease;
+}
+
+.account-submit::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: #c9aa72;
+
+    transform: translateX(-101%);
+
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+
+    z-index: 0;
+}
+
+.account-submit:hover::before {
+    transform: translateX(0);
+}
+
+.account-submit:hover {
+    border-color: #c9aa72;
+
+    transform: translateY(-2px);
+}
+
+.account-submit span,
+.account-submit {
+    isolation: isolate;
+}
+
+.account-submit span {
+    position: relative;
+    z-index: 2;
+
+    font-size: 16px;
+
+    transition:
+        transform 0.35s ease;
+}
+
+.account-submit:hover span {
+    transform: translate(4px, -4px);
+}
+
+
+/* INPUT FOCUS */
+
+.account-form input:focus {
+    border-bottom-color: #c9aa72;
+    box-shadow: 0 1px 0 rgba(201, 170, 114, 0.25);
+
+    padding-left: 6px;
+}
+
+
+/* TAB INTERACTION */
+
+.account-tab {
+    transition:
+        color 0.25s ease,
+        letter-spacing 0.25s ease;
+}
+
+.account-tab:hover {
+    letter-spacing: 0.18em;
+}
+
+
+/* STATUS */
+
+.account-status {
+    margin-top: 3px;
+    min-height: 14px;
+
+    color: #77777c;
+
+    font-size: 9px;
+    line-height: 1.6;
+}
+
+.account-status.success {
+    color: #c9aa72;
+}
+
+.account-status.error {
+    color: #ff8f8f;
+}
+
+/* =========================
+   PREMIUM SOCIAL SIGNUP BUTTONS
+========================= */
+
+.social-signup {
+    position: relative;
+    width: 100%;
+    min-height: 64px;
+
+    display: grid;
+    grid-template-columns: 38px 1fr 24px;
+    align-items: center;
+
+    padding: 0 20px;
+    margin-bottom: 10px;
+
+    background: rgba(255, 255, 255, 0.018);
+
+    border: 1px solid rgba(255, 255, 255, 0.13);
+
+    color: var(--white);
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+
+    text-align: left;
+
+    cursor: pointer;
+    overflow: hidden;
+
+    transition:
+        background 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.35s ease;
+}
+
+
+/* GOLD SLIDE */
+
+.social-signup::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 0;
+    height: 2px;
+
+    background: var(--gold);
+
+    transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* SUBTLE TOP GLOW */
+
+.social-signup::after {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    left: -100%;
+
+    width: 70%;
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(201, 170, 114, 0.8),
+        transparent
+    );
+
+    transition: left 0.6s ease;
+}
+
+
+.social-signup:hover {
+    background: rgba(201, 170, 114, 0.045);
+
+    border-color: rgba(201, 170, 114, 0.38);
+
+    transform: translateY(-2px);
+}
+
+
+.social-signup:hover::before {
+    width: 100%;
+}
+
+
+.social-signup:hover::after {
+    left: 130%;
+}
+
+
+/* ICON */
+
+.social-signup span:first-child {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    color: var(--gold);
+
+    font-size: 15px;
+    font-weight: 500;
+
+    transition:
+        transform 0.35s ease,
+        color 0.35s ease;
+}
+
+
+/* ARROW */
+
+.social-signup span:last-child {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    justify-content: flex-end;
+
+    color: var(--muted);
+
+    font-size: 16px;
+
+    transition:
+        transform 0.35s ease,
+        color 0.35s ease;
+}
+
+
+.social-signup:hover span:first-child {
+    transform: translateX(3px);
+
+    color: var(--white);
+}
+
+
+.social-signup:hover span:last-child {
+    transform: translate(3px, -3px);
+
+    color: var(--gold);
+}
+
+
+/* DIVIDER */
+
+.account-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin: 22px 0;
+}
+
+
+.account-divider::before,
+.account-divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.09);
+}
+
+
+.account-divider span {
+    color: var(--muted);
+
+    font-size: 8px;
+    letter-spacing: 0.2em;
+}
+/* =========================
+   PREMIUM ACCOUNT SUBMIT
+========================= */
+
+.account-submit {
+    position: relative;
+
+    width: 100%;
+    min-height: 64px;
+
+    margin-top: 8px;
+    padding: 0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: var(--white);
+
+    border: 1px solid var(--white);
+
+    color: var(--black);
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition:
+        color 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.35s ease;
+}
+
+
+/* GOLD SWEEP */
+
+.account-submit::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: var(--gold);
+
+    transform: translateX(-101%);
+
+    transition:
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+.account-submit:hover::before {
+    transform: translateX(0);
+}
+
+
+/* HOVER */
+
+.account-submit:hover {
+    border-color: var(--gold);
+
+    transform: translateY(-2px);
+}
+
+
+/* TEXT + ARROW */
+
+.account-submit {
+    isolation: isolate;
+}
+
+
+.account-submit span {
+    position: relative;
+    z-index: 2;
+
+    font-size: 17px;
+
+    transition:
+        transform 0.35s ease;
+}
+
+
+.account-submit:hover span {
+    transform: translate(4px, -4px);
+}
+
+
+/* KEEP BUTTON TEXT ABOVE THE SWEEP */
+
+.account-submit::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 1;
+
+    pointer-events: none;
+}
+/* =========================
+   ACCOUNT DRAWER — FINAL POLISH
+========================= */
+
+.account-drawer {
+    padding: 64px 46px 40px;
+
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+
+/* HEADER */
+
+.account-header {
+    margin-bottom: 42px;
+}
+
+.account-header .eyebrow {
+    margin-bottom: 14px;
+
+    color: var(--gold);
+
+    font-size: 8px;
+    letter-spacing: 0.22em;
+}
+
+.account-header h2 {
+    margin: 0 0 12px;
+
+    font-size: clamp(32px, 3vw, 46px);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+}
+
+.account-header > p:last-child {
+    max-width: 300px;
+
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+
+/* CLOSE BUTTON */
+
+.account-close {
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: var(--white);
+
+    font-size: 18px;
+
+    transition:
+        border-color 0.3s ease,
+        background 0.3s ease,
+        transform 0.3s ease;
+}
+
+.account-close:hover {
+    border-color: rgba(201, 170, 114, 0.55);
+
+    background: rgba(201, 170, 114, 0.06);
+
+    color: var(--gold);
+
+    transform: rotate(90deg);
+}
+
+
+/* TABS */
+
+.account-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    margin-bottom: 38px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.account-tab {
+    position: relative;
+
+    min-height: 46px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    font-family: inherit;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+
+    cursor: pointer;
+
+    transition:
+        color 0.3s ease,
+        letter-spacing 0.3s ease;
+}
+
+.account-tab::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: -1px;
+
+    width: 0;
+    height: 1px;
+
+    background: var(--gold);
+
+    transition: width 0.35s ease;
+}
+
+.account-tab.active {
+    color: var(--white);
+}
+
+.account-tab.active::after {
+    width: 100%;
+}
+
+.account-tab:hover {
+    color: var(--white);
+}
+
+
+/* ACCOUNT FORMS */
+
+.account-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px;
+}
+
+.account-form.hidden {
+    display: none;
+}
+
+
+/* INPUT LABELS */
+
+.account-form label {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+}
+
+
+/* INPUTS */
+
+.account-form input {
+    width: 100%;
+
+    padding: 0 0 12px;
+
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+
+    outline: none;
+
+    background: transparent;
+
+    color: var(--white);
+
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+
+    transition:
+        border-color 0.3s ease,
+        padding-left 0.3s ease;
+}
+
+.account-form input::placeholder {
+    color: rgba(255, 255, 255, 0.22);
+}
+
+.account-form input:focus {
+    border-bottom-color: var(--gold);
+
+    padding-left: 5px;
+}
+
+
+/* SOCIAL BUTTON SPACING */
+
+.social-signup {
+    min-height: 58px;
+
+    margin-bottom: 2px;
+}
+
+
+/* DIVIDER */
+
+.account-divider {
+    margin: 8px 0 4px;
+}
+
+
+/* MAIN BUTTON */
+
+.account-submit {
+    margin-top: 2px;
+
+    min-height: 60px;
+}
+
+
+/* NOTE */
+
+.account-note {
+    margin-top: 28px;
+
+    color: rgba(255, 255, 255, 0.28);
+
+    font-size: 8px;
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+}
+
+
+/* SMALL SCREENS */
+
+@media (max-width: 600px) {
+
+    .account-drawer {
+        width: 100%;
+        padding: 58px 24px 30px;
+    }
+
+    .account-header {
+        margin-bottom: 32px;
+    }
+
+    .account-header h2 {
+        font-size: 34px;
+    }
+
+}
