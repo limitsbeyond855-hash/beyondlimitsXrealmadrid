@@ -1549,3 +1549,19 @@ body.cart-open {
     font-size: 8px;
     line-height: 1.7;
 }
+.account-status {
+    margin-top: 18px;
+    font-size: 9px;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    color: #aaa;
+    min-height: 14px;
+}
+
+.account-status.success {
+    color: #d8d8d8;
+}
+
+.account-status.error {
+    color: #ff8f8f;
+}

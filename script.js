@@ -475,14 +475,22 @@ const password = document.getElementById("signup-password").value;
 
     if (error) {
     console.error("Supabase signup error:", error);
-    alert("Signup failed:\n\n" + error.message);
+
+    const accountStatus = document.getElementById("account-status");
+
+    accountStatus.textContent = error.message;
+    accountStatus.className = "account-status error";
+
     return;
 }
 
     if (data.user) {
-        alert(
-            "Account created successfully. Check your email to confirm your account."
-        );
+        const accountStatus = document.getElementById("account-status");
+
+accountStatus.textContent =
+    "Account created. Check your email to confirm your account.";
+
+accountStatus.className = "account-status success";
 
         signupForm.reset();
 
@@ -509,13 +517,22 @@ signinForm.addEventListener("submit", async (event) => {
     });
 
     if (error) {
-        alert(error.message);
-        return;
-    }
+    console.error("Supabase sign-in error:", error);
+
+    const signinStatus = document.getElementById("signin-status");
+
+    signinStatus.textContent = error.message;
+    signinStatus.className = "account-status error";
+
+    return;
+}
 
     if (data.user) {
 
-        alert("Welcome back to Beyond Limits.");
+        const signinStatus = document.getElementById("signin-status");
+
+signinStatus.textContent = "Welcome back.";
+signinStatus.className = "account-status success";
 
         signinForm.reset();
 
