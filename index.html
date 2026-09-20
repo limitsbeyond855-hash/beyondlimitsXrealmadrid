@@ -26,15 +26,46 @@
             <a href="#campaign">Campaign</a>
         </nav>
 
-        <div class="nav-actions">
+       <div class="nav-actions">
 
-    <button class="account" id="account-open">
-        ACCOUNT
-    </button>
 
-    <button class="bag">
-        BAG <span id="cart-count">0</span>
-    </button>
+<button class="account" id="account-open">
+    ACCOUNT
+</button>
+
+<button class="bag">
+    BAG <span id="cart-count">0</span>
+</button>
+
+<div class="user-menu" id="user-menu">
+
+    <button class="user-initial" id="user-initial"></button>
+
+    <div class="user-dropdown" id="user-dropdown">
+
+        <p class="user-dropdown-label">
+            ACCOUNT
+        </p>
+
+        <h3 id="user-dropdown-name">
+            USER
+        </h3>
+
+        <p id="user-dropdown-email">
+            email@example.com
+        </p>
+
+        <button id="signout-button">
+            SIGN OUT
+            <span>↗</span>
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
 
 </div>
 
@@ -513,130 +544,135 @@
 
     <form class="account-form" id="signin-form">
 
-        <label>
-            EMAIL
+```
+<label>
+    EMAIL
 
-            <input
-                type="email"
-                id="signin-email"
-                placeholder="you@example.com"
-                required
-            >
-        </label>
+    <input
+        type="email"
+        id="signin-email"
+        placeholder="you@example.com"
+        required
+    >
+</label>
 
-        <label>
-            PASSWORD
+<label>
+    PASSWORD
 
-            <input
-                type="password"
-                id="signin-password"
-                placeholder="••••••••"
-                required
-            >
-        </label>
+    <input
+        type="password"
+        id="signin-password"
+        placeholder="••••••••"
+        required
+    >
+</label>
 
-        <button type="submit" class="account-submit">
+<p class="account-status" id="signin-status"></p>
 
-            SIGN IN
+<button type="submit" class="account-submit">
 
-            <span>↗</span>
+    SIGN IN
 
-        </button>
+    <span>↗</span>
 
-    </form>
+</button>
+```
+
+</form>
+
 
 
     <!-- CREATE ACCOUNT FORM -->
 
     <form class="account-form hidden" id="signup-form">
 
-        <button
-            type="button"
-            class="social-signup"
-            id="google-signup"
-        >
-            <span>G</span>
+<button
+    type="button"
+    class="social-signup"
+    id="google-signup"
+>
+    <span>G</span>
 
-            CONTINUE WITH GOOGLE
+    CONTINUE WITH GOOGLE
 
-            <span>↗</span>
-        </button>
-
-
-        <button
-            type="button"
-            class="social-signup"
-            id="phone-signup"
-        >
-            <span>⌕</span>
-
-            CONTINUE WITH PHONE
-
-            <span>↗</span>
-        </button>
+    <span>↗</span>
+</button>
 
 
-        <div class="account-divider">
-            <span>OR</span>
-        </div>
+<button
+    type="button"
+    class="social-signup"
+    id="phone-signup"
+>
+    <span>⌕</span>
+
+    CONTINUE WITH PHONE
+
+    <span>↗</span>
+</button>
 
 
-        <label>
-            USERNAME
-
-            <input
-                type="text"
-                id="signup-username"
-                placeholder="@yourusername"
-                minlength="3"
-                maxlength="20"
-                required
-            >
-        </label>
+<div class="account-divider">
+    <span>OR</span>
+</div>
 
 
-        <label>
-            EMAIL
+<label>
+    USERNAME
 
-            <input
-                type="email"
-                id="signup-email"
-                placeholder="you@example.com"
-                required
-            >
-        </label>
-
-
-        <label>
-            PASSWORD
-
-            <input
-                type="password"
-                id="signup-password"
-                placeholder="Create a password"
-                minlength="8"
-                required
-            >
-        </label>
+    <input
+        type="text"
+        id="signup-username"
+        placeholder="@yourusername"
+        minlength="3"
+        maxlength="20"
+        required
+    >
+</label>
 
 
-        <button
-            type="submit"
-            class="account-submit"
-        >
+<label>
+    EMAIL
 
-            CREATE ACCOUNT
-
-            <span>↗</span>
-
-        </button>
-
-    </form>
+    <input
+        type="email"
+        id="signup-email"
+        placeholder="you@example.com"
+        required
+    >
+</label>
 
 
-    <p class="account-note">
-        By continuing, you agree to the Beyond Limits terms.
-    </p>
+<label>
+    PASSWORD
+
+    <input
+        type="password"
+        id="signup-password"
+        placeholder="Create a password"
+        minlength="8"
+        required
+    >
+</label>
+
+
+<p class="account-status" id="account-status"></p>
+
+
+<button
+    type="submit"
+    class="account-submit"
+>
+
+    CREATE ACCOUNT
+
+    <span>↗</span>
+
+</button>
+
+
+</form>
+
 
 </aside>
 

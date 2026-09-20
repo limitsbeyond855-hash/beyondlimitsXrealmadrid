@@ -540,3 +540,137 @@ signinStatus.className = "account-status success";
     }
 
 });
+/* =========================
+   USER ACCOUNT MENU
+========================= */
+
+const userMenu = document.getElementById("user-menu");
+const userInitial = document.getElementById("user-initial");
+const userDropdown = document.getElementById("user-dropdown");
+
+const userDropdownName =
+    document.getElementById("user-dropdown-name");
+
+const userDropdownEmail =
+    document.getElementById("user-dropdown-email");
+
+const signoutButton =
+    document.getElementById("signout-button");
+
+
+function showUserInitial(user) {
+
+    if (!user || !userInitial) return;
+
+    const username =
+        user.user_metadata?.username ||
+        user.email ||
+        "";
+
+    if (!username) return;
+
+    const cleanUsername =
+        username.replace("@", "");
+
+    userInitial.textContent =
+        cleanUsername.charAt(0).toUpperCase();
+
+    userDropdownName.textContent =
+        cleanUsername;
+
+    userDropdownEmail.textContent =
+        user.email || "";
+
+    userInitial.classList.add("active");
+}
+
+
+function hideUserInitial() {
+
+    if (!userInitial) return;
+
+    userInitial.textContent = "";
+
+    userInitial.classList.remove("active");
+
+    userDropdown.classList.remove("active");
+}
+
+
+userInitial.addEventListener("click", (event) => {
+
+    event.stopPropagation();
+
+    userDropdown.classList.toggle("active");
+
+});
+
+
+document.addEventListener("click", (event) => {
+
+    if (
+        userMenu &&
+        !userMenu.contains(event.target)
+    ) {
+        userDropdown.classList.remove("active");
+    }
+
+});
+
+
+signoutButton.addEventListener("click", async () => {
+
+    const { error } =
+        await supabaseClient.auth.signOut();
+
+    if (error) {
+
+        console.error(
+            "Supabase sign-out error:",
+            error
+        );
+
+        return;
+    }
+
+    hideUserInitial();
+
+});
+
+
+async function checkUserSession() {
+
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
+
+    if (session?.user) {
+
+        showUserInitial(session.user);
+
+    } else {
+
+        hideUserInitial();
+
+    }
+}
+
+
+supabaseClient.auth.onAuthStateChange(
+    (event, session) => {
+
+        if (session?.user) {
+
+            showUserInitial(session.user);
+
+        } else {
+
+            hideUserInitial();
+
+        }
+
+    }
+);
+
+
+checkUserSession();
