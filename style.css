@@ -1462,13 +1462,14 @@ body.cart-open {
 }
 
 .account-tabs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    width: 100%;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     margin-bottom: 35px;
 }
 
 .account-tab {
+    flex: 1;
     background: none;
     border: none;
     border-bottom: 1px solid transparent;
@@ -1477,6 +1478,7 @@ body.cart-open {
     font-size: 9px;
     letter-spacing: 0.12em;
     cursor: pointer;
+    text-align: center;
 }
 
 .account-tab.active {
@@ -1550,6 +1552,7 @@ body.cart-open {
     line-height: 1.7;
 }
 .account-status {
+    grid-column: 1 / -1;
     margin-top: 18px;
     font-size: 9px;
     line-height: 1.6;
@@ -1565,3 +1568,4 @@ body.cart-open {
 .account-status.error {
     color: #ff8f8f;
 }
+
