@@ -69,6 +69,8 @@ function updateCart() {
 
 function renderCart() {
 
+    cartDisplay.textContent = cart.length;
+
     if (cart.length === 0) {
 
         cartItems.innerHTML =
@@ -79,13 +81,12 @@ function renderCart() {
         return;
     }
 
-
     cartItems.innerHTML = "";
-
 
     cart.forEach((item, index) => {
 
-        const cartItem = document.createElement("div");
+        const cartItem =
+            document.createElement("div");
 
         cartItem.className = "cart-item";
 
@@ -93,48 +94,54 @@ function renderCart() {
             <div>
                 <h3>${item.name}</h3>
                 <p>BEYOND LIMITS</p>
-
-                <button
-                    class="remove-item"
-                    data-index="${index}">
-                    REMOVE
-                </button>
             </div>
 
             <span class="cart-item-price">
                 ₦${item.price.toLocaleString()}
             </span>
+
+            <button
+                class="remove-item"
+                data-index="${index}"
+                type="button"
+                aria-label="Remove item"
+            >
+                ×
+            </button>
         `;
 
         cartItems.appendChild(cartItem);
+
     });
 
 
-    const total = cart.reduce(
-        (sum, item) => sum + item.price,
-        0
-    );
+    const total =
+        cart.reduce(
+            (sum, item) => sum + item.price,
+            0
+        );
 
     cartTotal.textContent =
         `₦${total.toLocaleString()}`;
 
 
-    // Remove buttons
+    document
+        .querySelectorAll(".remove-item")
+        .forEach((button) => {
 
-    document.querySelectorAll(".remove-item").forEach((button) => {
+            button.addEventListener("click", () => {
 
-        button.addEventListener("click", () => {
+                const index =
+                    Number(button.dataset.index);
 
-            const index = Number(
-                button.dataset.index
-            );
+                cart.splice(index, 1);
 
-            cart.splice(index, 1);
+                updateCart();
 
-            updateCart();
+            });
+
         });
 
-    });
 }
 
 
@@ -672,5 +679,338 @@ supabaseClient.auth.onAuthStateChange(
     }
 );
 
+const bagView =
+    document.getElementById("bag-view");
 
 checkUserSession();
+/* =========================
+   CHECKOUT
+========================= */
+
+const checkoutButton =
+    document.getElementById("checkout-button");
+
+const checkoutView =
+    document.getElementById("checkout-view");
+
+const backToBag =
+    document.getElementById("back-to-bag");
+
+const checkoutForm =
+    document.getElementById("checkout-form");
+
+const checkoutSummary =
+    document.getElementById("checkout-summary");
+
+const checkoutTotal =
+    document.getElementById("checkout-total");
+
+const checkoutStatus =
+    document.getElementById("checkout-status");
+
+
+function openCheckout() {
+
+    if (cart.length === 0) {
+        return;
+    }
+
+    bagView.classList.add("hidden");
+    checkoutView.classList.remove("hidden");
+
+    renderCheckout();
+}
+
+
+function closeCheckout() {
+
+    checkoutView.classList.add("hidden");
+    bagView.classList.remove("hidden");
+
+    checkoutStatus.textContent = "";
+
+}
+
+
+function renderCheckout() {
+
+    checkoutSummary.innerHTML = "";
+
+    const groupedItems = {};
+
+    cart.forEach((item) => {
+
+        if (!groupedItems[item.name]) {
+
+            groupedItems[item.name] = {
+                name: item.name,
+                price: item.price,
+                quantity: 0
+            };
+
+        }
+
+        groupedItems[item.name].quantity++;
+    });
+
+
+    Object.values(groupedItems).forEach((item) => {
+
+        const itemTotal =
+            item.price * item.quantity;
+
+        const summaryItem =
+            document.createElement("div");
+
+        summaryItem.className =
+            "checkout-summary-item";
+
+        summaryItem.innerHTML = `
+            <div>
+                <strong>${item.name}</strong>
+                <span>QTY ${item.quantity}</span>
+            </div>
+
+            <span>
+                ₦${itemTotal.toLocaleString()}
+            </span>
+        `;
+
+        checkoutSummary.appendChild(summaryItem);
+
+    });
+
+
+    const total =
+        cart.reduce(
+            (sum, item) => sum + item.price,
+            0
+        );
+
+    checkoutTotal.textContent =
+        `₦${total.toLocaleString()}`;
+}
+
+
+checkoutButton.addEventListener(
+    "click",
+    openCheckout
+);
+
+
+backToBag.addEventListener(
+    "click",
+    closeCheckout
+);
+
+
+checkoutForm.addEventListener(
+    "submit",
+    async (event) => {
+
+        event.preventDefault();
+
+        if (cart.length === 0) {
+            checkoutStatus.textContent =
+                "Your bag is empty.";
+
+            checkoutStatus.className =
+                "checkout-status error";
+
+            return;
+        }
+
+
+        const {
+            data: { user },
+            error: userError
+        } = await supabaseClient.auth.getUser();
+
+
+        if (userError || !user) {
+
+            checkoutStatus.textContent =
+                "Please sign in before placing your order.";
+
+            checkoutStatus.className =
+                "checkout-status error";
+
+            return;
+        }
+
+
+        const customerName =
+            document
+                .getElementById("checkout-name")
+                .value
+                .trim();
+
+        const email =
+            document
+                .getElementById("checkout-email")
+                .value
+                .trim();
+
+        const phone =
+            document
+                .getElementById("checkout-phone")
+                .value
+                .trim();
+
+        const address =
+            document
+                .getElementById("checkout-address")
+                .value
+                .trim();
+
+        const city =
+            document
+                .getElementById("checkout-city")
+                .value
+                .trim();
+
+        const state =
+            document
+                .getElementById("checkout-state")
+                .value
+                .trim();
+
+
+        const total =
+            cart.reduce(
+                (sum, item) => sum + item.price,
+                0
+            );
+
+
+        const items =
+            cart.map((item) => ({
+                name: item.name,
+                price: item.price
+            }));
+
+
+        checkoutStatus.textContent =
+            "Creating your order...";
+
+        checkoutStatus.className =
+            "checkout-status";
+
+
+        /* =========================
+           CREATE ORDER
+        ========================= */
+
+        const {
+            data: order,
+            error: orderError
+        } =
+            await supabaseClient
+                .from("orders")
+                .insert([
+                    {
+                        user_id: user.id,
+                        customer_name: customerName,
+                        email: email,
+                        phone: phone,
+                        address: address,
+                        city: city,
+                        state: state,
+                        items: items,
+                        total: total,
+                        status: "pending"
+                    }
+                ])
+                .select("id")
+                .single();
+
+
+        if (orderError) {
+
+            console.error(
+                "Order creation error:",
+                orderError
+            );
+
+            checkoutStatus.textContent =
+                "We couldn't create your order.";
+
+            checkoutStatus.className =
+                "checkout-status error";
+
+            return;
+        }
+
+
+        /* =========================
+           INITIALIZE PAYSTACK
+        ========================= */
+
+        checkoutStatus.textContent =
+            "Connecting to secure payment...";
+
+
+        const functionUrl =
+            `${SUPABASE_URL}/functions/v1/initialize-payment`;
+
+
+        const paymentResponse =
+            await fetch(
+                functionUrl,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        apikey:
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        Authorization:
+                            `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+                    },
+
+                    body: JSON.stringify({
+                        email: email,
+                        amount: total,
+                        orderId: order.id
+                    })
+                }
+            );
+
+
+        const paymentData =
+            await paymentResponse.json();
+
+
+        if (
+            !paymentResponse.ok ||
+            !paymentData.authorization_url
+        ) {
+
+            console.error(
+                "Payment initialization error:",
+                paymentData
+            );
+
+            checkoutStatus.textContent =
+                paymentData.error ||
+                "We couldn't start the payment.";
+
+            checkoutStatus.className =
+                "checkout-status error";
+
+            return;
+        }
+
+
+        /* =========================
+           SEND CUSTOMER TO PAYSTACK
+        ========================= */
+
+        window.location.href =
+            paymentData.authorization_url;
+
+    }
+);

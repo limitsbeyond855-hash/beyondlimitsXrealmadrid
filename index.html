@@ -472,29 +472,216 @@
 
 <aside class="cart-drawer" id="cart-drawer">
 
-    <div class="cart-header">
-        <div>
-            <p class="eyebrow">YOUR SELECTION</p>
-            <h2>YOUR BAG</h2>
+    <!-- BAG VIEW -->
+
+    <div id="bag-view">
+
+        <div class="cart-header">
+            <div>
+                <p class="eyebrow">YOUR SELECTION</p>
+                <h2>YOUR BAG</h2>
+            </div>
+
+            <button class="cart-close" id="cart-close">×</button>
         </div>
 
-        <button class="cart-close" id="cart-close">×</button>
-    </div>
-
-    <div class="cart-items" id="cart-items">
-        <p class="empty-cart">Your bag is empty.</p>
-    </div>
-
-    <div class="cart-footer">
-        <div class="cart-total">
-            <span>TOTAL</span>
-            <strong id="cart-total">₦0</strong>
+        <div class="cart-items" id="cart-items">
+            <p class="empty-cart">Your bag is empty.</p>
         </div>
 
-        <button class="checkout-button">
-            CHECKOUT
-            <span>↗</span>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>TOTAL</span>
+                <strong id="cart-total">₦0</strong>
+            </div>
+
+            <button
+                class="checkout-button"
+                id="checkout-button"
+                type="button"
+            >
+                CHECKOUT
+                <span>↗</span>
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- CHECKOUT VIEW -->
+
+    <div
+        class="checkout-view hidden"
+        id="checkout-view"
+    >
+
+        <button
+            class="back-to-bag"
+            id="back-to-bag"
+            type="button"
+        >
+            ← BACK TO BAG
         </button>
+
+        <div class="checkout-header">
+
+            <p class="eyebrow">
+                BEYOND LIMITS
+            </p>
+
+            <h2>
+                CHECKOUT
+            </h2>
+
+            <p>
+                Complete your details to continue
+                with your order.
+            </p>
+
+        </div>
+
+
+        <form
+            id="checkout-form"
+            class="checkout-form"
+        >
+
+            <!-- CONTACT -->
+
+            <div class="checkout-section">
+
+                <p class="checkout-label">
+                    CONTACT INFORMATION
+                </p>
+
+                <label>
+                    FULL NAME
+
+                    <input
+                        type="text"
+                        id="checkout-name"
+                        placeholder="Your full name"
+                        required
+                    >
+                </label>
+
+                <label>
+                    EMAIL
+
+                    <input
+                        type="email"
+                        id="checkout-email"
+                        placeholder="you@example.com"
+                        required
+                    >
+                </label>
+
+                <label>
+                    PHONE NUMBER
+
+                    <input
+                        type="tel"
+                        id="checkout-phone"
+                        placeholder="08012345678"
+                        required
+                    >
+                </label>
+
+            </div>
+
+
+            <!-- DELIVERY -->
+
+            <div class="checkout-section">
+
+                <p class="checkout-label">
+                    DELIVERY DETAILS
+                </p>
+
+                <label>
+                    DELIVERY ADDRESS
+
+                    <input
+                        type="text"
+                        id="checkout-address"
+                        placeholder="House number, street, area"
+                        required
+                    >
+                </label>
+
+                <label>
+                    CITY
+
+                    <input
+                        type="text"
+                        id="checkout-city"
+                        placeholder="Lagos"
+                        required
+                    >
+                </label>
+
+                <label>
+                    STATE
+
+                    <input
+                        type="text"
+                        id="checkout-state"
+                        placeholder="Lagos"
+                        required
+                    >
+                </label>
+
+            </div>
+
+
+            <!-- ORDER SUMMARY -->
+
+            <div class="checkout-section">
+
+                <p class="checkout-label">
+                    ORDER SUMMARY
+                </p>
+
+                <div
+                    id="checkout-summary"
+                    class="checkout-summary"
+                ></div>
+
+                <div class="checkout-total">
+
+                    <span>
+                        TOTAL
+                    </span>
+
+                    <strong id="checkout-total">
+                        ₦0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <p
+                id="checkout-status"
+                class="checkout-status"
+            ></p>
+
+
+            <button
+                type="submit"
+                class="place-order-button"
+            >
+                PLACE ORDER
+
+                <span>
+                    ↗
+                </span>
+
+            </button>
+
+        </form>
+
     </div>
 
 </aside>
