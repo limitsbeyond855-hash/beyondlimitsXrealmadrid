@@ -384,6 +384,7 @@ document.addEventListener("keydown", (event) => {
     }
 
 });
+
 /* =========================
    ACCOUNT DRAWER
 ========================= */
@@ -441,6 +442,8 @@ signupTab.addEventListener("click", () => {
     signinForm.classList.add("hidden");
 
 });
+
+
 /* =========================
    SUPABASE AUTHENTICATION
 ========================= */
@@ -455,6 +458,9 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_PUBLISHABLE_KEY
 );
 
+const DELIVERY_METHOD = "Standard Delivery";
+const DELIVERY_FEE = 0;
+
 
 /* =========================
    CREATE ACCOUNT
@@ -465,39 +471,39 @@ signupForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const username = document.getElementById("signup-username").value.trim();
-const email = document.getElementById("signup-email").value.trim();
-const password = document.getElementById("signup-password").value;
+    const email = document.getElementById("signup-email").value.trim();
+    const password = document.getElementById("signup-password").value;
 
-   const { data, error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password,
-    options: {
-        emailRedirectTo:
-            "https://limitsbeyond855-hash.github.io/beyondlimitsXrealmadrid/",
-        data: {
-            username: username
+    const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+            emailRedirectTo:
+                "https://limitsbeyond855-hash.github.io/beyondlimitsXrealmadrid/",
+            data: {
+                username: username
+            }
         }
-    }
-});
+    });
 
     if (error) {
-    console.error("Supabase signup error:", error);
+        console.error("Supabase signup error:", error);
 
-    const accountStatus = document.getElementById("account-status");
+        const accountStatus = document.getElementById("account-status");
 
-    accountStatus.textContent = error.message;
-    accountStatus.className = "account-status error";
+        accountStatus.textContent = error.message;
+        accountStatus.className = "account-status error";
 
-    return;
-}
+        return;
+    }
 
     if (data.user) {
         const accountStatus = document.getElementById("account-status");
 
-accountStatus.textContent =
-    "Account created. Check your email to confirm your account.";
+        accountStatus.textContent =
+            "Account created. Check your email to confirm your account.";
 
-accountStatus.className = "account-status success";
+        accountStatus.className = "account-status success";
 
         signupForm.reset();
 
@@ -524,22 +530,22 @@ signinForm.addEventListener("submit", async (event) => {
     });
 
     if (error) {
-    console.error("Supabase sign-in error:", error);
+        console.error("Supabase sign-in error:", error);
 
-    const signinStatus = document.getElementById("signin-status");
+        const signinStatus = document.getElementById("signin-status");
 
-    signinStatus.textContent = error.message;
-    signinStatus.className = "account-status error";
+        signinStatus.textContent = error.message;
+        signinStatus.className = "account-status error";
 
-    return;
-}
+        return;
+    }
 
     if (data.user) {
 
         const signinStatus = document.getElementById("signin-status");
 
-signinStatus.textContent = "Welcome back.";
-signinStatus.className = "account-status success";
+        signinStatus.textContent = "Welcome back.";
+        signinStatus.className = "account-status success";
 
         signinForm.reset();
 
@@ -547,6 +553,8 @@ signinStatus.className = "account-status success";
     }
 
 });
+
+
 /* =========================
    USER ACCOUNT MENU
 ========================= */
@@ -683,6 +691,8 @@ const bagView =
     document.getElementById("bag-view");
 
 checkUserSession();
+
+
 /* =========================
    CHECKOUT
 ========================= */
@@ -788,7 +798,7 @@ function renderCheckout() {
         );
 
     checkoutTotal.textContent =
-        `₦${total.toLocaleString()}`;
+        `₦${(total + DELIVERY_FEE).toLocaleString()}`;
 }
 
 
@@ -914,10 +924,16 @@ checkoutForm.addEventListener(
                         email: email,
                         phone: phone,
                         address: address,
+                        delivery_address: address,
                         city: city,
                         state: state,
                         items: items,
-                        total: total,
+                        subtotal: total,
+                        delivery_fee: DELIVERY_FEE,
+                        total: total + DELIVERY_FEE,
+                        delivery_method: DELIVERY_METHOD,
+                        logistics_status: "Processing",
+                        payment_status: "unpaid",
                         status: "pending"
                     }
                 ])
@@ -973,7 +989,7 @@ checkoutForm.addEventListener(
 
                     body: JSON.stringify({
                         email: email,
-                        amount: total,
+                        amount: total + DELIVERY_FEE,
                         orderId: order.id
                     })
                 }
@@ -1014,3 +1030,774 @@ checkoutForm.addEventListener(
 
     }
 );
+
+
+/* =========================
+   ORDER CONFIRMATION
+========================= */
+
+async function showOrderConfirmation() {
+
+    const params =
+        new URLSearchParams(window.location.search);
+
+    const reference =
+        params.get("reference") ||
+        params.get("trxref");
+
+    if (!reference) return;
+
+
+    const confirmation =
+        document.createElement("div");
+
+    confirmation.id =
+        "order-confirmation";
+
+    confirmation.innerHTML = `
+        <div class="order-confirmation-backdrop"></div>
+
+        <div class="order-confirmation-panel">
+
+            <button
+                type="button"
+                class="order-confirmation-close"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+            <div class="order-confirmation-mark">
+                ✓
+            </div>
+
+            <p class="order-confirmation-eyebrow">
+                BEYOND LIMITS
+            </p>
+
+            <h2>
+                ORDER<br>CONFIRMED
+            </h2>
+
+            <p class="order-confirmation-message">
+                Your payment has been received and your order is confirmed.
+            </p>
+
+            <div class="order-confirmation-details">
+
+                <p class="order-confirmation-loading">
+                    Confirming your order...
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                class="order-confirmation-continue"
+            >
+                CONTINUE SHOPPING
+            </button>
+
+        </div>
+    `;
+
+
+    const style =
+        document.createElement("style");
+
+
+    style.textContent = `
+
+        #order-confirmation {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .order-confirmation-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,.82);
+            backdrop-filter: blur(10px);
+        }
+
+        .order-confirmation-panel {
+            position: relative;
+            z-index: 2;
+            width: min(620px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 48px;
+            background: #111114;
+            border: 1px solid rgba(255,255,255,.12);
+            color: #f5f3ef;
+            box-shadow: 0 30px 100px rgba(0,0,0,.5);
+        }
+
+        .order-confirmation-close {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            border: 0;
+            background: transparent;
+            color: #f5f3ef;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .order-confirmation-mark {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            border: 1px solid #c9aa72;
+            color: #c9aa72;
+            font-size: 24px;
+        }
+
+        .order-confirmation-eyebrow {
+            margin: 0 0 12px;
+            color: #c9aa72;
+            font-size: 11px;
+            letter-spacing: .2em;
+        }
+
+        .order-confirmation-panel h2 {
+            margin: 0 0 22px;
+            font-size: clamp(38px, 7vw, 68px);
+            line-height: .9;
+            letter-spacing: -.04em;
+        }
+
+        .order-confirmation-message {
+            margin: 0 0 30px;
+            color: #8b898f;
+            line-height: 1.6;
+        }
+
+        .order-confirmation-details {
+            padding: 20px 0;
+            border-top: 1px solid rgba(255,255,255,.12);
+            border-bottom: 1px solid rgba(255,255,255,.12);
+        }
+
+        .order-confirmation-section {
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255,255,255,.07);
+        }
+
+        .order-confirmation-section:last-child {
+            border-bottom: 0;
+        }
+
+        .order-confirmation-section-title {
+            margin: 0 0 12px;
+            color: #c9aa72;
+            font-size: 10px;
+            letter-spacing: .18em;
+        }
+
+        .order-confirmation-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 9px 0;
+            font-size: 14px;
+        }
+
+        .order-confirmation-row span:first-child {
+            color: #8b898f;
+        }
+
+        .order-confirmation-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,.07);
+        }
+
+        .order-confirmation-item-name {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .order-confirmation-item-price {
+            color: #8b898f;
+            font-size: 13px;
+        }
+
+        .order-confirmation-total {
+            margin-top: 8px;
+            padding-top: 15px;
+            font-size: 18px;
+        }
+
+        .order-confirmation-reference {
+            max-width: 60%;
+            color: #8b898f;
+            font-size: 12px;
+            word-break: break-all;
+            text-align: right;
+        }
+
+        .order-confirmation-continue {
+            width: 100%;
+            margin-top: 28px;
+            padding: 16px 20px;
+            border: 1px solid #c9aa72;
+            background: #c9aa72;
+            color: #09090b;
+            font-weight: 700;
+            letter-spacing: .08em;
+            cursor: pointer;
+        }
+
+        .order-confirmation-error {
+            color: #c9aa72;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+
+            .order-confirmation-panel {
+                padding: 34px 24px;
+            }
+
+            .order-confirmation-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .order-confirmation-reference {
+                max-width: 100%;
+                text-align: left;
+            }
+
+        }
+
+    `;
+
+
+    document.head.appendChild(style);
+    document.body.appendChild(confirmation);
+
+
+    const details =
+        confirmation.querySelector(
+            ".order-confirmation-details"
+        );
+
+
+    const close =
+        () => confirmation.remove();
+
+
+    confirmation
+        .querySelector(
+            ".order-confirmation-close"
+        )
+        .addEventListener(
+            "click",
+            close
+        );
+
+
+    confirmation
+        .querySelector(
+            ".order-confirmation-backdrop"
+        )
+        .addEventListener(
+            "click",
+            close
+        );
+
+
+    confirmation
+        .querySelector(
+            ".order-confirmation-continue"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                close();
+
+                history.replaceState(
+                    {},
+                    document.title,
+                    window.location.pathname
+                );
+
+            }
+        );
+
+
+    for (
+        let attempt = 0;
+        attempt < 12;
+        attempt++
+    ) {
+
+        try {
+
+            const {
+                data: { user }
+            } =
+                await supabaseClient.auth.getUser();
+
+
+            if (!user) {
+
+                details.innerHTML = `
+
+                    <p class="order-confirmation-error">
+
+                        Your payment was completed.
+                        Please sign in to view
+                        the order details.
+
+                    </p>
+
+                `;
+
+                return;
+            }
+
+
+            const {
+                data: orders,
+                error
+            } =
+                await supabaseClient
+                    .from("orders")
+                    .select("*")
+                    .eq("user_id", user.id)
+                    .eq(
+                        "payment_reference",
+                        reference
+                    )
+                    .eq(
+                        "status",
+                        "paid"
+                    )
+                    .limit(1);
+
+
+            if (error) {
+
+                console.error(
+                    "Order confirmation lookup error:",
+                    error
+                );
+
+            }
+
+
+            if (
+                !error &&
+                orders &&
+                orders.length > 0
+            ) {
+
+                const order =
+                    orders[0];
+
+
+                let items =
+                    order.items;
+
+
+                if (
+                    typeof items === "string"
+                ) {
+
+                    try {
+
+                        items =
+                            JSON.parse(items);
+
+                    } catch {
+
+                        items = [];
+
+                    }
+
+                }
+
+
+                if (!Array.isArray(items)) {
+
+                    items = [];
+
+                }
+
+
+                const itemsHTML =
+                    items.map((item) => `
+
+                        <div
+                            class="order-confirmation-item"
+                        >
+
+                            <span
+                                class="order-confirmation-item-name"
+                            >
+                                ${item.name.trim()}
+                            </span>
+
+                            <span
+                                class="order-confirmation-item-price"
+                            >
+                                ₦${Number(
+                                    item.price
+                                ).toLocaleString()}
+                            </span>
+
+                        </div>
+
+                    `).join("");
+
+
+                details.innerHTML = `
+
+                    <div
+                        class="order-confirmation-section"
+                    >
+
+                        <p
+                            class="order-confirmation-section-title"
+                        >
+                            ORDER
+                        </p>
+
+                        ${itemsHTML}
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                SUBTOTAL
+                            </span>
+
+                            <strong>
+                                ₦${Number(
+                                    order.subtotal ??
+                                    order.total
+                                ).toLocaleString()}
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                DELIVERY
+                            </span>
+
+                            <strong>
+                                ₦${Number(
+                                    order.delivery_fee || 0
+                                ).toLocaleString()}
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="order-confirmation-row
+                            order-confirmation-total"
+                        >
+
+                            <span>
+                                TOTAL
+                            </span>
+
+                            <strong>
+                                ₦${Number(
+                                    order.total
+                                ).toLocaleString()}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="order-confirmation-section"
+                    >
+
+                        <p
+                            class="order-confirmation-section-title"
+                        >
+                            DELIVERY DETAILS
+                        </p>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                NAME
+                            </span>
+
+                            <strong>
+                                ${order.customer_name || "—"}
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                PHONE
+                            </span>
+
+                            <strong>
+                                ${order.phone || "—"}
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                EMAIL
+                            </span>
+
+                            <strong>
+                                ${order.email || "—"}
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                ADDRESS
+                            </span>
+
+                            <strong>
+                                ${
+                                    order.delivery_address ||
+                                    order.address ||
+                                    "—"
+                                }
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                CITY / STATE
+                            </span>
+
+                            <strong>
+                                ${
+                                    order.city || "—"
+                                },
+                                ${
+                                    order.state || "—"
+                                }
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                DELIVERY METHOD
+                            </span>
+
+                            <strong>
+                                ${
+                                    order.delivery_method ||
+                                    DELIVERY_METHOD
+                                }
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="order-confirmation-section"
+                    >
+
+                        <p
+                            class="order-confirmation-section-title"
+                        >
+                            STATUS
+                        </p>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                PAYMENT
+                            </span>
+
+                            <strong>
+                                PAID ✓
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                LOGISTICS
+                            </span>
+
+                            <strong>
+                                ${
+                                    order.logistics_status ||
+                                    "Processing"
+                                }
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                ORDER
+                            </span>
+
+                            <strong>
+                                CONFIRMED
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="order-confirmation-row"
+                        >
+
+                            <span>
+                                REFERENCE
+                            </span>
+
+                            <span
+                                class="order-confirmation-reference"
+                            >
+                                ${
+                                    order.payment_reference ||
+                                    reference
+                                }
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                cart = [];
+
+                updateCart();
+
+
+                history.replaceState(
+                    {},
+                    document.title,
+                    window.location.pathname
+                );
+
+
+                return;
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Order confirmation lookup error:",
+                error
+            );
+
+        }
+
+
+        await new Promise(
+            (resolve) =>
+                setTimeout(
+                    resolve,
+                    1500
+                )
+        );
+
+    }
+
+
+    details.innerHTML = `
+
+        <p class="order-confirmation-error">
+
+            Your payment was received.
+            We're still confirming your order.
+            Your order is safely recorded
+            in the system.
+
+        </p>
+
+
+        <div
+            class="order-confirmation-row"
+        >
+
+            <span>
+                REFERENCE
+            </span>
+
+            <span
+                class="order-confirmation-reference"
+            >
+                ${reference}
+            </span>
+
+        </div>
+
+    `;
+
+}
+
+
+showOrderConfirmation();
